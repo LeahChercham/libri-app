@@ -2,6 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import Button from '@mui/material/Button';
+import { Link as RouterLink } from "react-router-dom";
+
 
 const styles = {
     appbar: { backgroundColor: "#0F202A", height: 100 },
@@ -32,9 +35,20 @@ function NavBar() {
     return (
         <AppBar style={styles.appbar}>
             <Toolbar style={styles.toolbar}>
-                <div>LIBRI</div>
-                <div>New search</div>
-                <div>log in</div>
+
+         
+                <div><RouterLink to="/" style={{ textDecoration: "none" }}>
+                              <Button style={styles.menuButton}>LIBRI</Button>
+                    </RouterLink></div>
+                <div>   <RouterLink to="/search" style={{ textDecoration: "none" }}>
+                              <Button style={styles.menuButton}>RECHERCHE</Button>
+                    </RouterLink>
+                    </div>
+                <div>
+                <RouterLink to="/login" style={{ textDecoration: "none" }}>
+                              <Button style={styles.menuButton}>CONNEXION</Button>
+                    </RouterLink>
+                </div>
             </Toolbar>
 
         </AppBar>

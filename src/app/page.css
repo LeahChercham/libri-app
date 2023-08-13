@@ -38,7 +38,7 @@ select{
 table{
     width: 100%;
   }
-  
+   
   table, th, td {
     border-bottom: 2px solid var(--borderColor);
     border-collapse: collapse;
