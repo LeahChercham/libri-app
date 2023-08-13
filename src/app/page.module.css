@@ -1,10 +1,25 @@
+
+.app {
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between;
   align-items: center;
   padding: 6rem;
-  min-height: 100vh;
+  min-height: 100vh; */
+}
+
+.page {
+  height: calc(100vh - 100px);
+  margin-top:100px;
+  background-color: "white";
 }
 
 .description {
