@@ -6,41 +6,53 @@ import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import LandingPage from '@/components/LandingPage';
 import LogIn from '@/components/LogIn'
-import SearchBook from '@/components/SearchBook'
-import React, { useEffect, useState } from 'react';
+import SearchBook from '@/components/Books'
+import React from 'react';
+import { UserProvider } from '@/context/user'; // wrap UserProvider around entire app so it can be accessed in the entire Application
+import Borrows from '@/components/Borrows';
+import Users from '@/components/Users';
 
 export default function Home() {
 
-  const [state, setState] = useState({})
 
   return (
     <BrowserRouter>
-      <main className={styles.main}>
+      <UserProvider>wrap UserProvider around entire app so it can be accessed in the entire Application
 
-        <NavBar />
-        <div className={styles.page}>
-          <Routes>
-            <Route path="/" element={
-              <LandingPage />
-            }> </Route>
+        <main className={styles.main}>
 
-
-            <Route path="/search" element={
-              <SearchBook />
-            }>
-            </Route>
-
-            <Route path="/login" element={
-              <LogIn />
-            }>
-            </Route>
-
-          </Routes>
-        </div>
+          <NavBar />
+          <div className={styles.page}>
+            <Routes>
+              <Route path="/" element={
+                <LandingPage />
+              }> </Route>
 
 
+              <Route path="/search" element={
+                <SearchBook />
+              }>
+              </Route>
 
-      </main>
+              <Route path="/login" element={
+                <LogIn />
+              }> </Route>
+              
+                <Route path="/borrows" element={
+                  <Borrows />
+                }> </Route>
+                <Route path="/users" element={
+                  <Users />
+                }>
+                </Route>
+
+            </Routes>
+          </div>
+
+
+
+        </main>
+      </UserProvider>
     </BrowserRouter>
   )
 }

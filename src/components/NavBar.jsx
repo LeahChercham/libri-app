@@ -4,6 +4,7 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { Link as RouterLink } from "react-router-dom";
+import { useUserContext } from '@/context/user';
 
 
 const styles = {
@@ -17,6 +18,7 @@ const styles = {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        height: 100
     },
     links: {
         display: "flex",
@@ -31,24 +33,36 @@ const styles = {
 
 function NavBar() {
 
-
+    const [user, setUser] = useUserContext()
     return (
         <AppBar style={styles.appbar}>
             <Toolbar style={styles.toolbar}>
 
-         
+
                 <div><RouterLink to="/" style={{ textDecoration: "none" }}>
-                              <Button style={styles.menuButton}>LIBRI</Button>
-                    </RouterLink></div>
+                    <Button style={styles.menuButton}>LIBRI</Button>
+                </RouterLink></div>
                 <div>   <RouterLink to="/search" style={{ textDecoration: "none" }}>
-                              <Button style={styles.menuButton}>RECHERCHE</Button>
-                    </RouterLink>
-                    </div>
-                <div>
-                <RouterLink to="/login" style={{ textDecoration: "none" }}>
-                              <Button style={styles.menuButton}>CONNEXION</Button>
-                    </RouterLink>
+                    <Button style={styles.menuButton}>RECHERCHE</Button>
+                </RouterLink>
                 </div>
+                <div>{user != "" ? <RouterLink to="/login" style={{ textDecoration: "none" }}>
+                    <Button style={styles.menuButton}>CONNEXION</Button>
+                </RouterLink> : <RouterLink to="/login" style={{ textDecoration: "none" }}>
+                    <Button style={styles.menuButton}>DECONNEXION</Button>
+                </RouterLink>}
+
+                </div>
+                <div>{user != "" ? <RouterLink to="/users" style={{ textDecoration: "none" }}>
+                    <Button style={styles.menuButton}>UTILISATEURS</Button>
+                </RouterLink> :null}
+                </div>
+                <div>{user != "" ? <RouterLink to="/borrows" style={{ textDecoration: "none" }}>
+                    <Button style={styles.menuButton}>EMPRUNTS</Button>
+                </RouterLink> :null}
+                </div>
+
+                
             </Toolbar>
 
         </AppBar>
