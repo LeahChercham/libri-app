@@ -1,24 +1,26 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const PORT = process.env.PORT || 5000
-const user = require('./backend/routes/User')
+const user = require('./backend/routes/user.js')
+const people = require('./backend/routes/people.js')
+const oracledb = require('oracledb')
 
 let app = express()
 
-let connectionProperties = {
-    user: process.env.DBAAS_USER_NAME || "oracle",
-    password: process.env.DBAAS_USER_PASSWORD || "oracle",
-    connectString: process.env.DBAAS_DEFAULT_CONNECT_DESCRIPTOR || "localhost/xe"
-  };
+// let connectionProperties = {
+//     user: process.env.DBAAS_USER_NAME || "c##libriadmin",
+//     password: process.env.DBAAS_USER_PASSWORD || "libri123admin",
+//     connectString: process.env.DBAAS_DEFAULT_CONNECT_DESCRIPTOR || "localhost/xe"
+// };
 
 // doRelease to release db connection
-function doRelease(connection) {
-    connection.release(function(err){
-        if(err){
-            console.error(err.message)
-        }
-    })
-}
+// function doRelease(connection) {
+//     connection.release(function (err) {
+//         if (err) {
+//             console.error(err.message)
+//         }
+//     })
+// }
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -36,12 +38,17 @@ router.use(function (request, response, next) {
     response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     response.setHeader('Access-Control-Allow-Credentials', true);
     next();
-  });
+});
 
 
 
 
 
-  app.use(express.static('static'))
-  app.use('/', user)
-  app.listen(PORT) //start server
+app.use(express.static('static'))
+app.use('/', user)
+app.use('/', people)
+app.listen(PORT, () => { console.log('listening to Port ' + PORT) }) //start server
+
+app.get('/', (req,res)=> {
+    res.send('Hello world') //test
+})
