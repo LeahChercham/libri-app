@@ -60,67 +60,24 @@ const styles = {
 }
 function SearchBook(props) {
 
-    // const [state, setState] = useState({
-    //     redirect: false,
-    //     input: "",
-    //     results: []
-    // })
-
-    // const navigate = useNavigate();
-    // const handleChange = (event) => {
-    //     event.preventDefault();
-    //     setState({
-    //         ...state,
-    //         [event.target.id]: event.target.value
-    //     })
-    // }
-
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     let input = state.input
-    //     input = input.toLowerCase()
-    //     let searchTerms = input.split(" ")
-
-
-    //     search(searchTerms);
-    // }
-
-    // const search = async (searchTerms) => {
-    //     let results = []
-
-    //     let response = await Axios.get(CREATE_ROUTE('user/search'), {
-    //         params: {
-    //             data: searchTerms
-    //         }
-    //     })
-
-    //     if (response.data) {
-    //         let results = state.results
-    //         let redirect = state.redirect
-    //         results = response.data
-    //         redirect = true
-    //         setState({ ...state, results, redirect })
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (state.redirect) {
-    //         return navigate('/results', { state: { results: state.results } })
-    //     }
-    // }, [state.redirect])
-
     return (
         <div style={styles.main}>
             <div style={styles.header} >
                 Trouvez un livre
             </div>
+            <div>
+                <RouterLink to="/addBooks" style={{ textDecoration: "none" }}>
+                    <Button
+                        style={styles.menuButton}>Ajouter un livre</Button>
+                </RouterLink>
+            </div>
             <div style={styles.secondRow}>
                 <SearchIcon style={styles.icon} />
                 <div style={styles.inputDiv}>
-                    <Input id="input" 
-                    // onChange={handleChange} 
-                    style={styles.input} type="search" 
-                    placeholder="Essayez 'la petite boutique aux poisons'" />
+                    <Input id="input"
+                        // onChange={handleChange} 
+                        style={styles.input} type="search"
+                        placeholder="Essayez 'la petite boutique aux poisons'" />
                 </div>
                 <div style={styles.buttonDiv}>
                     {/* <RouterLink to="/results" style={{ textDecoration: "none" }}>

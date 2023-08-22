@@ -11,6 +11,7 @@ import React from 'react';
 import { UserProvider } from '@/context/user'; // wrap UserProvider around entire app so it can be accessed in the entire Application
 import Borrows from '@/components/Borrows';
 import Users from '@/components/Users';
+import BookForm from '@/components/BookComponents/BookForm';
 
 export default function Home() {
 
@@ -37,14 +38,18 @@ export default function Home() {
               <Route path="/login" element={
                 <LogIn />
               }> </Route>
-              
-                <Route path="/borrows" element={
-                  <Borrows />
-                }> </Route>
-                <Route path="/users" element={
-                  <Users />
-                }>
-                </Route>
+
+              <Route path="/addBooks" element={
+                <BookForm />
+              }> </Route>
+
+              <Route path="/borrows" element={
+                <Borrows />
+              }> </Route>
+              <Route path="/users" element={
+                <Users />
+              }>
+              </Route>
 
             </Routes>
           </div>

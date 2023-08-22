@@ -7,8 +7,8 @@ const {connectionProperties, doRelease} = require('../database')
 // add CRUD activities
 
 // First draft to get an IDEA. Have to populate users as these are persons
-router.get("/people", async function (request,response){
-    console.log('GET people')
+router.get("/auteurs", async function (request,response){
+    console.log('GET AUTHORS')
 
     oracledb.getConnection(connectionProperties, function(err, connection){
         if(err){
@@ -18,7 +18,7 @@ router.get("/people", async function (request,response){
         }
         console.log('After connection')
 
-        connection.execute("SELECT * FROM people",{}, {outFormat: oracledb.OBJECT},function(err, result){
+        connection.execute("SELECT * FROM auteur",{}, {outFormat: oracledb.OBJECT},function(err, result){
             if(err){
                 console.error(err.message)
                 response.status(500).send("Error getting data from DB")
@@ -26,15 +26,15 @@ router.get("/people", async function (request,response){
                 return;
             }
             console.log("RESULTSET:" + JSON.stringify(result))
-            let people = []
+            let auteurs = []
             result.rows.forEach(function(element){
-                people.push({
-                    id: element.PERSON_ID, 
-                    firstName: element.PERSON_FIRST_NAME, 
-                    lastName: element.PERSON_LAST_NAME, 
+                auteurs.push({
+                    id: element.AID, 
+                    prenom: element.PRENOM, 
+                    nom: element.NOM, 
                 })
             }, this)
-            response.json(people)
+            response.json(auteurs)
             doRelease(connection)
             console.log("after release")
         })

@@ -1,8 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const PORT = process.env.PORT || 5000
-const user = require('./backend/routes/user.js')
-const people = require('./backend/routes/people.js')
+const authors = require('./backend/routes/authors.js')
 const oracledb = require('oracledb')
 
 let app = express()
@@ -45,8 +44,7 @@ router.use(function (request, response, next) {
 
 
 app.use(express.static('static'))
-app.use('/', user)
-app.use('/', people)
+app.use('/', authors)
 app.listen(PORT, () => { console.log('listening to Port ' + PORT) }) //start server
 
 app.get('/', (req,res)=> {
