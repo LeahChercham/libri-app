@@ -115,6 +115,13 @@ CREATE SEQUENCE livres_seq
     MAXVALUE 999999999
     CACHE 50;
 
+CREATE SEQUENCE livre_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+
 
 
 -- Oracle SQL Developer Data Modeler Summary Report: 

@@ -50,10 +50,10 @@ router.post("/livres", async function (request, response) {
 
     try {
         const connection = await oracledb.getConnection(connectionProperties);
-
+        console.log('After connection')
         const sql = `
             BEGIN
-                :result := books_admin.add_book(:lid, :titre, :pages, :lienimage, :annee);
+                :result := books_admin.add_book(:titre, :pages, :lienimage, :annee);
             END;
         `;
 
