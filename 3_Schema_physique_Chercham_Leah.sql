@@ -63,6 +63,20 @@ DELAI DEPASSE
 
 ALTER TABLE statut ADD CONSTRAINT statut_pk PRIMARY KEY ( sid );
 
+
+-- Insert the first row
+INSERT INTO statut (sid, appellation, description)
+VALUES ('1', 'Rendu', 'Le livre a été rendu');
+
+-- Insert the second row
+INSERT INTO statut (sid, appellation, description)
+VALUES ('2', 'Emprunt en cours', 'Le livre est encore emprunté dans le délai normal');
+
+-- Insert the third row
+INSERT INTO statut (sid, appellation, description)
+VALUES ('3', 'Délai dépassé', 'Le livre n''a pas encore été déposé et le délai d''emprunt est dépassé');
+
+
 CREATE TABLE utilisateur (
     "UID"        CHAR(240) NOT NULL,
     adresse      VARCHAR2(240),
@@ -108,6 +122,26 @@ CREATE SEQUENCE auteurs_seq
     MAXVALUE 999999999
     CACHE 50;
 
+CREATE SEQUENCE utilisateurs_seq
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CACHE 50;
+
+CREATE SEQUENCE emprunts_seq
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 1
+    MAXVALUE 999999999
+    CACHE 50;
+
+CREATE SEQUENCE utilisateur_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
 CREATE SEQUENCE livres_seq
     START WITH 1
     INCREMENT BY 1
@@ -116,6 +150,12 @@ CREATE SEQUENCE livres_seq
     CACHE 50;
 
 CREATE SEQUENCE livre_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+    CREATE SEQUENCE emprunt_id_seq
     START WITH 1
     INCREMENT BY 1
     NOCACHE
