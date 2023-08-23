@@ -7,6 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Axios from 'axios';
 import consts from '../consts'
 import BookTable from './BookComponents/BookTable'
+import { useBooksContext } from '@/context/books';
 const CREATE_ROUTE = consts.CREATE_ROUTE
 const util = require('util')
 
@@ -58,7 +59,33 @@ const styles = {
     }
 
 }
-function SearchBook(props) {
+function SearchBook() {
+
+    const [books, setBooks] = useBooksContext()
+   
+    const getBooks = async () => {
+      
+        try {
+            debugger
+            const response = await Axios.get(CREATE_ROUTE('livres'));
+            console.log(response)
+            if (response.status === 200) { // Check for a successful status code
+                console.log('Books fetched successfully!');
+                console.log(response)
+                const books = response.data.books; // Assuming response.data.rows contains the books array
+                setBooks(books); // Update the books context with fetched data
+                console.log(books)
+            } else {
+                console.error('Error fetching books');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    useEffect(() => {
+        getBooks(); // Fetch when component mounts
+    },[])
 
     return (
         <div style={styles.main}>
@@ -78,13 +105,6 @@ function SearchBook(props) {
                         // onChange={handleChange} 
                         style={styles.input} type="search"
                         placeholder="Essayez 'la petite boutique aux poisons'" />
-                </div>
-                <div style={styles.buttonDiv}>
-                    {/* <RouterLink to="/results" style={{ textDecoration: "none" }}>
-                        <Button
-                            onClick={handleSubmit}
-                            style={styles.menuButton}>Search</Button>
-                    </RouterLink> */}
                 </div>
             </div>
             <BookTable />

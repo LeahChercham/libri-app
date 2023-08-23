@@ -18,28 +18,27 @@ router.get("/livres", async function (request, response) {
         }
         console.log('After connection')
 
-        connection.execute("SELECT * FROM livre", {}, { outFormat: oracledb.OBJECT }, function (err, result) {
-            if (err) {
-                console.error(err.message)
-                response.status(500).send("Error getting data from DB")
+        connection.execute('BEGIN :books_cur := books_admin.get_books; END;',
+            {
+                books_cur: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }
+            }, { outFormat: oracledb.OBJECT }, async function (err, result) {
+                if (err) {
+                    console.error(err.message)
+                    response.status(500).send("Error getting data from DB")
+                    doRelease(connection)
+                    return;
+                }
+                
+                const cursor = result.outBinds.books_cur;
+                // Fetch rows from the cursor
+                const rows = await cursor.getRows(100);
+                console.log('books:', rows )
+                
+                response.status(200).json({ books: rows });
+                
                 doRelease(connection)
-                return;
-            }
-            console.log("RESULTSET:" + JSON.stringify(result))
-            let livres = []
-            result.rows.forEach(function (element) {
-                livres.push({
-                    id: element.LID,
-                    titre: element.TITRE,
-                    pages: element.PAGES,
-                    lienImage: element.LIENIMAGE,
-                    annee: element.ANNEE
-                })
-            }, this)
-            response.json(livres)
-            doRelease(connection)
-            console.log("after release")
-        })
+                console.log("after release")
+            })
     })
 })
 
