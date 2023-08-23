@@ -35,7 +35,7 @@ function BookRow({ book, isAdmin }) {
       <td><img src={book.LIENIMAGE} style={style.image} /></td>
       <td>{book.LID}</td>
       <td>{book.TITRE}</td>
-      <td>{book.ANNEE}</td>
+      <td>{new Date(book.ANNEE).getFullYear()}</td>
       <td>{book.PAGES}</td>
       {isAdmin && (
         <>

@@ -9,6 +9,7 @@ const { connectionProperties, doRelease } = require('../database')
 // First draft to get an IDEA. Have to populate users as these are persons
 router.get("/livres", async function (request, response) {
     console.log('GET BOOKS')
+ 
 
     oracledb.getConnection(connectionProperties, function (err, connection) {
         if (err) {
@@ -28,14 +29,14 @@ router.get("/livres", async function (request, response) {
                     doRelease(connection)
                     return;
                 }
-                
+
                 const cursor = result.outBinds.books_cur;
                 // Fetch rows from the cursor
                 const rows = await cursor.getRows(100);
-                console.log('books:', rows )
-                
+                console.log('books:', rows)
+
                 response.status(200).json({ books: rows });
-                
+
                 doRelease(connection)
                 console.log("after release")
             })
@@ -46,9 +47,10 @@ router.get("/livres", async function (request, response) {
 router.post("/livres", async function (request, response) {
 
     console.log('POST BOOKS')
+    let connection
 
     try {
-        const connection = await oracledb.getConnection(connectionProperties);
+        connection = await oracledb.getConnection(connectionProperties);
         console.log('After connection')
         const sql = `
             BEGIN
@@ -62,22 +64,22 @@ router.post("/livres", async function (request, response) {
             annee: new Date(request.body.annee)
         };
 
-        try {
-            const result = await connection.execute(sql, bindVars);
-            const newBookId = result.outBinds.result;
-            console.log('New book ID:', newBookId);
-        } catch (error) {
-            console.error('Error executing add_book:', error);
-        } finally {
-            if (connection) {
-                await connection.close();
-                console.log("after release");
-            }
-        }
-    } catch (err) {
-        console.error(err.message);
+
+        const result = await connection.execute(sql, bindVars);
+        const newBookId = result.outBinds.result;
+        console.log('New book ID:', newBookId);
+        response.status(201).json({ message: "New book saved", lid: newBookId });
+    } catch (error) {
+
+        console.error(error.message);
         response.status(500).send("Error connecting to DB");
+    } finally {
+        if (connection) {
+            doRelease(connection)
+            console.log("after release");
+        }
     }
+
 });
 
 

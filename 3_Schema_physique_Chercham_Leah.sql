@@ -121,6 +121,11 @@ CREATE SEQUENCE livre_id_seq
     NOCACHE
     NOCYCLE;
 
+CREATE SEQUENCE auteur_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
 
 
 

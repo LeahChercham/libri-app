@@ -23,10 +23,37 @@ function BookForm() {
 
 
         try {
+            debugger
 
-            let response = await Axios.post(CREATE_ROUTE('livres'), bookData)
-            if (response.ok) {
+            let bookResponse = await Axios.post(CREATE_ROUTE('livres'), {
+                titre: bookData.titre,
+                pages: bookData.pages,
+                lienimage: bookData.lienimage,
+                annee: bookData.annee
+            })
+            if (bookResponse) {
                 console.log('Book saved successfully!');
+                let bookID = bookResponse.data.lid
+                let authorResponse = await Axios.post(CREATE_ROUTE('auteur'), { prenom: bookData.auteur_prenom, nom: bookData.auteur_nom }) // verify variables
+
+                if (authorResponse) {
+                    console.log('Author saved successfully!')
+                    let authorID = authorResponse.data.aid
+
+                    // Now assign the book and author to LIVRE_AUTEUR
+                    let assignResponse = await Axios.post(CREATE_ROUTE('livreauteur'), {
+                        livre_lid: bookID,
+                        auteur_aid: authorID
+                    });
+
+                    if (assignResponse) {
+                        console.log("book and author assigned to LIVRE_AUTEUR");
+                    } else {
+                        console.error('Error assigning Book and Author to LIVRE_AUTEUR');
+                    }
+                } else {
+                    console.error('Error saving author')
+                }
             } else {
                 console.error('Error saving book');
             }
@@ -66,6 +93,21 @@ function BookForm() {
                 value={bookData.annee}
                 onChange={handleInputChange}
             />
+            <input
+                type="text"
+                name="auteur_prenom"
+                placeholder="Author's First Name"
+                value={bookData.auteur_prenom}
+                onChange={handleInputChange}
+            />
+            <input
+                type="text"
+                name="auteur_nom"
+                placeholder="Author's Last Name"
+                value={bookData.auteur_nom}
+                onChange={handleInputChange}
+            />
+
             <button onClick={handleSaveBook}>Save Book</button>
         </div>
     );
