@@ -6,7 +6,6 @@ const { connectionProperties, doRelease } = require('../database')
 
 // add CRUD activities
 
-// First draft to get an IDEA. Have to populate users as these are persons
 router.get("/livres", async function (request, response) {
     console.log('GET BOOKS')
  

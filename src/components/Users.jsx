@@ -1,9 +1,10 @@
 import React from 'react'
+import UserTable from './UserComponents/UserTable'
 
-function Users (props){
-    return(
+function Users(props) {
+    return (
         <div>
-            "Users table"
+            <UserTable />
         </div>
     )
 }

@@ -4,6 +4,7 @@ const PORT = process.env.PORT || 5000
 const auteur = require('./backend/routes/auteur.js')
 const livre = require('./backend/routes/livre.js')
 const livreauteur = require('./backend/routes/livreauteur.js') 
+const utilisateur = require('./backend/routes/utilisateur.js') 
 const oracledb = require('oracledb')
 const cors = require('cors')
 let app = express()
@@ -21,6 +22,7 @@ app.use(express.static('static'))
 app.use('/', auteur)
 app.use('/', livre)
 app.use('/', livreauteur)
+app.use('/', utilisateur)
 app.listen(PORT, () => { console.log('listening to Port ' + PORT) }) //start server
 
 app.get('/', (req, res) => {

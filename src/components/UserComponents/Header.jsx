@@ -12,9 +12,11 @@ class Header extends Component {
                 <th>Ville</th>
                 <th>Numéro</th>
                 <th>Email</th>
-                <th>Livres empruntés</th>
-                <th>Date de prochain retour</th>
-                
+                {/* <th>Livres empruntés</th> */}
+                {/* <th>Date de prochain retour</th> */}
+                <th>Modify</th>
+                <th>Delete</th>
+
             </tr>
 
         );

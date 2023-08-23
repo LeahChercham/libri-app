@@ -14,6 +14,7 @@ import { PageProvider } from '@/context/page'; // wrap PageProvider around entir
 import Borrows from '@/components/Borrows';
 import Users from '@/components/Users';
 import BookForm from '@/components/BookComponents/BookForm';
+import { UtilisateursProvider } from '@/context/utilisateurs';
 
 export default function Home() {
 
@@ -23,44 +24,46 @@ export default function Home() {
       <UserProvider>wrap UserProvider around entire app so it can be accessed in the entire Application
         <BooksProvider>
           <PageProvider>
+            <UtilisateursProvider>
 
-            <main className={styles.main}>
+              <main className={styles.main}>
 
-              <NavBar />
-              <div className={styles.page}>
-                <Routes>
-                  <Route path="/" element={
-                    <LandingPage />
-                  }> </Route>
-
-
-                  <Route path="/search" element={
-                    <SearchBook />
-                  }>
-                  </Route>
-
-                  <Route path="/login" element={
-                    <LogIn />
-                  }> </Route>
-
-                  <Route path="/addBooks" element={
-                    <BookForm />
-                  }> </Route>
-
-                  <Route path="/borrows" element={
-                    <Borrows />
-                  }> </Route>
-                  <Route path="/users" element={
-                    <Users />
-                  }>
-                  </Route>
-
-                </Routes>
-              </div>
+                <NavBar />
+                <div className={styles.page}>
+                  <Routes>
+                    <Route path="/" element={
+                      <LandingPage />
+                    }> </Route>
 
 
+                    <Route path="/search" element={
+                      <SearchBook />
+                    }>
+                    </Route>
 
-            </main>
+                    <Route path="/login" element={
+                      <LogIn />
+                    }> </Route>
+
+                    <Route path="/addBooks" element={
+                      <BookForm />
+                    }> </Route>
+
+                    <Route path="/borrows" element={
+                      <Borrows />
+                    }> </Route>
+                    <Route path="/users" element={
+                      <Users />
+                    }>
+                    </Route>
+
+                  </Routes>
+                </div>
+
+
+
+              </main>
+            </UtilisateursProvider>
           </PageProvider>
         </BooksProvider>
       </UserProvider>
