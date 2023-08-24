@@ -31,8 +31,10 @@ function BookRow({ book, isAdmin }) {
   };
 
   const deleteBook = async () => {
+    let LID = book.LID
+
     try {
-      const response = await Axios.delete(CREATE_ROUTE('livre'), { LID: book.LID })
+      const response = await Axios.delete(CREATE_ROUTE(`livre/${LID}`))
       console.log(response);
       if (response.status === 200) {
         window.alert('Livre supprimé')
