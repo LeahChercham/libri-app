@@ -11,11 +11,11 @@ function BookTable() {
 
     const [currentPage, setCurrentPage] = usePageContext()
     setCurrentPage(1)
-    const [user, setUser] = useUserContext()
-
+    
     const [books] = useBooksContext()
     console.log(books)
-
+    
+    const [user, setUser] = useUserContext()
     let isAdmin = false
     if (user.admin) {
         isAdmin = true

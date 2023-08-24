@@ -10,22 +10,21 @@ router.post("/livreauteur", async function (request, response) {
     console.log('POST LIVRE_AUTEUR')
     const { livre_lid, auteur_aid } = request.body;
     let connection
-
-
+    console.log(livre_lid, auteur_aid)
 
     try {
         connection = await oracledb.getConnection(connectionProperties);
         console.log('After connection')
         const sql = `
                 BEGIN
-                    :result := livre_auteur_admin.assign_book_author(:livre_lid, :auteur_aid);
+                    livre_auteur_admin.assign_book_author(:livre_lid, :auteur_aid, :result);
                 END;
             `;
 
         const binds = {
-            result: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
             livre_lid: livre_lid,
-            auteur_aid: auteur_aid
+            auteur_aid: auteur_aid,
+            result: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
         };
 
 

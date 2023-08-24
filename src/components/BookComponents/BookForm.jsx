@@ -8,7 +8,8 @@ function BookForm() {
         titre: '',
         pages: '',
         lienimage: '',
-        annee: ''
+        annee: '',
+        auteurs: []
     });
 
     const handleInputChange = (event) => {
@@ -19,11 +20,35 @@ function BookForm() {
         }));
     };
 
+    const handleAddAuthor = () => {
+        setBookData((prevData) => ({
+            ...prevData,
+            auteurs: [...prevData.auteurs,
+            { prenom: '', nom: '' }]
+        }))
+    }
+
+
+    const handleAuthorInputChange = (index, event) => {
+        const { name, value } = event.target;
+
+        setBookData((prevData) => {
+            const auteurs = [...prevData.auteurs]
+            auteurs[index] = {
+                ...auteurs[index], // Copy the existing author object
+                [name]: value // Update the specific property
+            };
+            return { ...prevData, auteurs }
+        })
+
+    }
+
+
+
     const handleSaveBook = async () => {
 
 
         try {
-            debugger
 
             let bookResponse = await Axios.post(CREATE_ROUTE('livres'), {
                 titre: bookData.titre,
@@ -34,25 +59,27 @@ function BookForm() {
             if (bookResponse) {
                 console.log('Book saved successfully!');
                 let bookID = bookResponse.data.lid
-                let authorResponse = await Axios.post(CREATE_ROUTE('auteur'), { prenom: bookData.auteur_prenom, nom: bookData.auteur_nom }) // verify variables
+                for (const author of bookData.auteurs) {
+                    let authorResponse = await Axios.post(CREATE_ROUTE('auteur'), { prenom: author.prenom, nom: author.nom })
 
-                if (authorResponse) {
-                    console.log('Author saved successfully!')
-                    let authorID = authorResponse.data.aid
+                    if (authorResponse) {
+                        console.log('Author saved successfully!')
+                        let authorID = authorResponse.data.aid
 
-                    // Now assign the book and author to LIVRE_AUTEUR
-                    let assignResponse = await Axios.post(CREATE_ROUTE('livreauteur'), {
-                        livre_lid: bookID,
-                        auteur_aid: authorID
-                    });
+                        // Now assign the book and author to LIVRE_AUTEUR
+                        let assignResponse = await Axios.post(CREATE_ROUTE('livreauteur'), {
+                            livre_lid: bookID,
+                            auteur_aid: authorID
+                        });
 
-                    if (assignResponse) {
-                        console.log("book and author assigned to LIVRE_AUTEUR");
+                        if (assignResponse) {
+                            console.log("book and author assigned to LIVRE_AUTEUR");
+                        } else {
+                            console.error('Error assigning Book and Author to LIVRE_AUTEUR');
+                        }
                     } else {
-                        console.error('Error assigning Book and Author to LIVRE_AUTEUR');
+                        console.error('Error saving author')
                     }
-                } else {
-                    console.error('Error saving author')
                 }
             } else {
                 console.error('Error saving book');
@@ -93,21 +120,28 @@ function BookForm() {
                 value={bookData.annee}
                 onChange={handleInputChange}
             />
-            <input
-                type="text"
-                name="auteur_prenom"
-                placeholder="Author's First Name"
-                value={bookData.auteur_prenom}
-                onChange={handleInputChange}
-            />
-            <input
-                type="text"
-                name="auteur_nom"
-                placeholder="Author's Last Name"
-                value={bookData.auteur_nom}
-                onChange={handleInputChange}
-            />
 
+
+            {bookData.auteurs.map((author, index) => ( // for more authors
+                <div key={index}>
+                    <input
+                        type="text"
+                        name={`prenom`}
+                        placeholder="Author's First Name"
+                        value={author.prenom}
+                        onChange={(event) => handleAuthorInputChange(index, event)}
+                    />
+                    <input
+                        type="text"
+                        name={`nom`}
+                        placeholder="Author's Last Name"
+                        value={author.nom}
+                        onChange={(event) => handleAuthorInputChange(index, event)}
+                    />
+                </div>
+            ))}
+
+            <button onClick={handleAddAuthor}>Ajouter un auteur</button>
             <button onClick={handleSaveBook}>Save Book</button>
         </div>
     );

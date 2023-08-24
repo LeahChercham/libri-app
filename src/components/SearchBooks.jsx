@@ -8,6 +8,7 @@ import Axios from 'axios';
 import consts from '../consts'
 import BookTable from './BookComponents/BookTable'
 import { useBooksContext } from '@/context/books';
+import { useUserContext } from '@/context/user';
 const CREATE_ROUTE = consts.CREATE_ROUTE
 const util = require('util')
 
@@ -61,13 +62,19 @@ const styles = {
 }
 function SearchBook() {
 
+
+    const [user, setUser] = useUserContext()
+    let isAdmin = false
+    if (user.admin) {
+        isAdmin = true
+    } else { isAdmin = false }
+
     const [books, setBooks] = useBooksContext()
-   
+
     const getBooks = async () => {
-      
+
         try {
-            debugger
-            const response = await Axios.get(CREATE_ROUTE('livres'));
+            const response = await Axios.get(CREATE_ROUTE('livres_with_authors'));
             console.log(response)
             if (response.status === 200) { // Check for a successful status code
                 console.log('Books fetched successfully!');
@@ -85,19 +92,20 @@ function SearchBook() {
 
     useEffect(() => {
         getBooks(); // Fetch when component mounts
-    },[])
+    }, [])
 
     return (
         <div style={styles.main}>
             <div style={styles.header} >
                 Trouvez un livre
             </div>
-            <div>
-                <RouterLink to="/addBooks" style={{ textDecoration: "none" }}>
-                    <Button
-                        style={styles.menuButton}>Ajouter un livre</Button>
-                </RouterLink>
-            </div>
+            {isAdmin ?
+                <div>
+                    <RouterLink to="/addBooks" style={{ textDecoration: "none" }}>
+                        <Button
+                            style={styles.menuButton}>Ajouter un livre</Button>
+                    </RouterLink>
+                </div> : <div></div>}
             <div style={styles.secondRow}>
                 <SearchIcon style={styles.icon} />
                 <div style={styles.inputDiv}>

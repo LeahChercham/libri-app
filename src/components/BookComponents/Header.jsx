@@ -8,6 +8,7 @@ function Header({ isAdmin }) {
             <th>Titre</th>
             <th>Année</th>
             <th>Nombre de pages</th>
+            <th>Auteur</th>
             {isAdmin && (
                 <>
                     <th>Modify</th>

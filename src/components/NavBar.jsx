@@ -34,6 +34,24 @@ const styles = {
 function NavBar() {
 
     const [user, setUser] = useUserContext()
+    let isAdmin = false
+    if (user.admin) {
+        isAdmin = true
+    } else { isAdmin = false }
+
+    const logout = e => {
+
+        event.preventDefault();
+        setUser(
+            {
+                user: "",
+                admin: false,
+                sessionStart: null
+            }
+        )
+
+    }
+
     return (
         <AppBar style={styles.appbar}>
             <Toolbar style={styles.toolbar}>
@@ -46,23 +64,23 @@ function NavBar() {
                     <Button style={styles.menuButton}>RECHERCHE</Button>
                 </RouterLink>
                 </div>
-                <div>{user != "" ? <RouterLink to="/login" style={{ textDecoration: "none" }}>
-                    <Button style={styles.menuButton}>CONNEXION</Button>
+                <div>{isAdmin ? <RouterLink to="/" style={{ textDecoration: "none" }}>
+                    <Button style={styles.menuButton} onClick={logout}>DECONNEXION</Button>
                 </RouterLink> : <RouterLink to="/login" style={{ textDecoration: "none" }}>
-                    <Button style={styles.menuButton}>DECONNEXION</Button>
+                    <Button style={styles.menuButton}>CONNEXION</Button>
                 </RouterLink>}
 
                 </div>
-                <div>{user != "" ? <RouterLink to="/users" style={{ textDecoration: "none" }}>
+                <div>{isAdmin ? <RouterLink to="/users" style={{ textDecoration: "none" }}>
                     <Button style={styles.menuButton}>UTILISATEURS</Button>
-                </RouterLink> :null}
+                </RouterLink> : null}
                 </div>
-                <div>{user != "" ? <RouterLink to="/borrows" style={{ textDecoration: "none" }}>
+                <div>{isAdmin ? <RouterLink to="/borrows" style={{ textDecoration: "none" }}>
                     <Button style={styles.menuButton}>EMPRUNTS</Button>
-                </RouterLink> :null}
+                </RouterLink> : null}
                 </div>
 
-                
+
             </Toolbar>
 
         </AppBar>

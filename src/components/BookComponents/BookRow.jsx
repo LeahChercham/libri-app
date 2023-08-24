@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
 const style = {
-    image : {
-        maxHeight: 100, 
-        maxWidth: 100
-    }
+  image: {
+    maxHeight: 100,
+    maxWidth: 100
+  }
 }
 function BookRow({ book, isAdmin }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -35,8 +35,9 @@ function BookRow({ book, isAdmin }) {
       <td><img src={book.LIENIMAGE} style={style.image} /></td>
       <td>{book.LID}</td>
       <td>{book.TITRE}</td>
-      <td>{new Date(book.ANNEE).getFullYear()}</td>
+      <td>{book.ANNEE ? new Date(book.ANNEE).getFullYear() : ""}</td>
       <td>{book.PAGES}</td>
+      <td>{book.AUTHORS}</td>
       {isAdmin && (
         <>
           <td>
