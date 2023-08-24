@@ -9,12 +9,13 @@ const initialPage = 1;
 
 function BookTable() {
 
+    
     const [currentPage, setCurrentPage] = usePageContext()
     setCurrentPage(1)
-    
+
     const [books] = useBooksContext()
     console.log(books)
-    
+
     const [user, setUser] = useUserContext()
     let isAdmin = false
     if (user.admin) {
@@ -46,11 +47,12 @@ function BookTable() {
                 <thead>
                     <Header />
                 </thead>
-                <tbody>  {books ? currentBooks.map((book) => (
+                <tbody>  {books && books.length !== 0 ? currentBooks.map((book) => (
                     <BookRow key={book.LID} book={book} isAdmin={isAdmin} />
-                )) : <tr>Pas de livres enregistrés pour cette bibliothèque</tr>}
+                )) : <tr><td>Pas de livres trouvés.</td></tr>}
                 </tbody>
             </table>
+
             {totalPages > 1 && (
                 <div>
                     {Array.from({ length: totalPages }, (_, index) => index + 1).map(

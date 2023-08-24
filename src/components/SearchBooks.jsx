@@ -62,6 +62,8 @@ const styles = {
 }
 function SearchBook() {
 
+    const [searchString, setSearchString] = useState("")
+
 
     const [user, setUser] = useUserContext()
     let isAdmin = false
@@ -70,6 +72,36 @@ function SearchBook() {
     } else { isAdmin = false }
 
     const [books, setBooks] = useBooksContext()
+
+    const handleChange = e => {
+
+        setSearchString(e.target.value)
+    }
+
+    const searchBooks = async () => {
+        if (searchString) {
+            try {
+                const response = await Axios.get(CREATE_ROUTE(`livre/recherche?search_string=${searchString}`))
+                console.log(response)
+                if (response.status === 200) { // Check for a successful status code
+                    console.log('Books fetched successfully!');
+                    console.log(response)
+                    const books = response.data.books; // Assuming response.data.rows contains the books array
+                    setBooks(books); // Update the books context with fetched data
+                    console.log(books)
+                } else {
+                    console.error('Error fetching books');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } else {
+            getBooks()
+        }
+    }
+
+
+
 
     const getBooks = async () => {
 
@@ -107,12 +139,14 @@ function SearchBook() {
                     </RouterLink>
                 </div> : <div></div>}
             <div style={styles.secondRow}>
-                <SearchIcon style={styles.icon} />
+                <SearchIcon style={styles.icon} onClick={searchBooks} />
                 <div style={styles.inputDiv}>
                     <Input id="input"
-                        // onChange={handleChange} 
+                        onChange={handleChange}
                         style={styles.input} type="search"
-                        placeholder="Essayez 'la petite boutique aux poisons'" />
+                        placeholder="Essayez 'la petite boutique aux poisons'"
+                        value={searchString}
+                    />
                 </div>
             </div>
             <BookTable />

@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import DeleteModal from './DeleteModal';
+import Axios from 'axios'
+import consts from '@/consts';
+import { CREATE_ROUTE } from '@/consts';
 
 const style = {
   image: {
@@ -8,6 +12,7 @@ const style = {
 }
 function BookRow({ book, isAdmin }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -25,12 +30,43 @@ function BookRow({ book, isAdmin }) {
     toggleEdit();
   };
 
+  const deleteBook = async () => {
+    try {
+      const response = await Axios.delete(CREATE_ROUTE('livre'), { LID: book.LID })
+      console.log(response);
+      if (response.status === 200) {
+        window.alert('Livre supprimé')
+        setIsDeleteModalOpen(false);
+        // maybe call function to 'get books' again 
+      } else {
+        window.alert('Erreur lors de la suppression')
+        setIsDeleteModalOpen(false);
+      }
+    } catch (error) {
+      console.log(error);
+      window.alert('Erreur lors de la suppression')
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   const handleDelete = () => {
-    // Implement the delete logic here
-    // You'll need to show a confirmation dialog and delete the book from the database
+    setIsDeleteModalOpen(true)
+  }
+
+
+
+  const handleModalConfirm = () => {
+    // Perform delete action here
+    deleteBook()
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleModalCancel = () => {
+    setIsDeleteModalOpen(false);
   };
 
   return (
+
     <tr>
       <td><img src={book.LIENIMAGE} style={style.image} /></td>
       <td>{book.LID}</td>
@@ -52,10 +88,17 @@ function BookRow({ book, isAdmin }) {
           </td>
           <td>
             <button onClick={handleDelete}>Delete</button>
+            <DeleteModal
+              isOpen={isDeleteModalOpen}
+              onCancel={handleModalCancel}
+              onConfirm={handleModalConfirm}
+            />
           </td>
         </>
       )}
     </tr>
+
+
   );
 }
 
