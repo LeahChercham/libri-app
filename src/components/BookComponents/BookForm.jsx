@@ -1,7 +1,25 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
 import consts from '../../consts'
+import { Input, Button } from '@mui/material'
 const CREATE_ROUTE = consts.CREATE_ROUTE
+
+const style = {
+    container: {
+        display: 'flex',
+        flexDirection: "column",
+        padding: "1em"
+    },
+    input: {
+        padding: "1em",
+        margin: "1em"
+    },
+    tooLongText: {
+        fontSize: "x-large",
+        color: 'red',
+        padding: "1em",
+    }
+}
 
 function BookForm() {
     const [bookData, setBookData] = useState({
@@ -11,6 +29,8 @@ function BookForm() {
         annee: '',
         auteurs: []
     });
+
+    const [showTooLongText, setShowTooLongText] = useState({ show: false, text: "" })
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -43,6 +63,14 @@ function BookForm() {
 
     }
 
+    const maxLengthCheck = (object) => {
+        if (object.target.value.length >= object.target.maxLength) {
+            setShowTooLongText({ show: true, text: `Longueur maximale ${object.target.maxLength} pour ${object.target.name} atteinte` })
+            object.target.value = object.target.value.slice(0, object.target.maxLength)
+            return
+        }
+        setShowTooLongText({ show: false, text: "" })
+    }
 
 
     const handleSaveBook = async () => {
@@ -74,6 +102,15 @@ function BookForm() {
 
                         if (assignResponse) {
                             console.log("book and author assigned to LIVRE_AUTEUR");
+                            window.alert("Enregistrement réussi")
+                            setBookData({
+                                titre: '',
+                                pages: '',
+                                lienimage: '',
+                                annee: '',
+                                auteurs: []
+                            })
+
                         } else {
                             console.error('Error assigning Book and Author to LIVRE_AUTEUR');
                         }
@@ -90,14 +127,16 @@ function BookForm() {
     };
 
     return (
-        <div>
+        <div style={style.container}>
             <h2>Add a New Book</h2>
             <input
                 type="text"
                 name="titre"
-                placeholder="Title"
+                placeholder="Titre"
                 value={bookData.titre}
                 onChange={handleInputChange}
+                maxLength="240" onInput={maxLengthCheck}
+                style={style.input}
             />
             <input
                 type="number"
@@ -105,6 +144,7 @@ function BookForm() {
                 placeholder="Pages"
                 value={bookData.pages}
                 onChange={handleInputChange}
+                maxLength="240" onInput={maxLengthCheck} style={style.input}
             />
             <input
                 type="text"
@@ -112,13 +152,15 @@ function BookForm() {
                 placeholder="Image URL"
                 value={bookData.lienimage}
                 onChange={handleInputChange}
+                maxLength="4000" onInput={maxLengthCheck} style={style.input}
             />
             <input
                 type="text"
                 name="annee"
-                placeholder="Year"
+                placeholder="Année de publication"
                 value={bookData.annee}
                 onChange={handleInputChange}
+                maxLength="240" onInput={maxLengthCheck} style={style.input}
             />
 
 
@@ -127,22 +169,27 @@ function BookForm() {
                     <input
                         type="text"
                         name={`prenom`}
-                        placeholder="Author's First Name"
+                        placeholder="Prénom de l'auteur"
                         value={author.prenom}
                         onChange={(event) => handleAuthorInputChange(index, event)}
+                        maxLength="240" onInput={maxLengthCheck} style={style.input}
                     />
                     <input
                         type="text"
                         name={`nom`}
-                        placeholder="Author's Last Name"
+                        placeholder="Nom de l'auteur"
                         value={author.nom}
                         onChange={(event) => handleAuthorInputChange(index, event)}
+                        maxLength="240" onInput={maxLengthCheck} style={style.input}
                     />
                 </div>
+
             ))}
 
-            <button onClick={handleAddAuthor}>Ajouter un auteur</button>
-            <button onClick={handleSaveBook}>Save Book</button>
+            {showTooLongText.show ? <div style={style.tooLongText}>{showTooLongText.text}</div> : <div></div>}
+
+            <Button onClick={handleAddAuthor}>Ajouter un auteur</Button>
+            <Button onClick={handleSaveBook}>Enregistrer</Button>
         </div>
     );
 }

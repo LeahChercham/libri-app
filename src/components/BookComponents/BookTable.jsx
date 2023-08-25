@@ -7,9 +7,9 @@ import { usePageContext } from '@/context/page';
 
 const initialPage = 1;
 
-function BookTable() {
+function BookTable({getBooks}) {
 
-    
+
     const [currentPage, setCurrentPage] = usePageContext()
     setCurrentPage(1)
 
@@ -48,7 +48,7 @@ function BookTable() {
                     <Header />
                 </thead>
                 <tbody>  {books && books.length !== 0 ? currentBooks.map((book) => (
-                    <BookRow key={book.LID} book={book} isAdmin={isAdmin} />
+                    <BookRow key={book.LID} book={book} isAdmin={isAdmin} getBooks={getBooks} />
                 )) : <tr><td>Pas de livres trouvés.</td></tr>}
                 </tbody>
             </table>

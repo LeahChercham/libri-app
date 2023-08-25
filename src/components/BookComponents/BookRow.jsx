@@ -10,7 +10,7 @@ const style = {
     maxWidth: 100
   }
 }
-function BookRow({ book, isAdmin }) {
+function BookRow({ book, isAdmin, getBooks }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -38,6 +38,7 @@ function BookRow({ book, isAdmin }) {
       console.log(response);
       if (response.status === 200) {
         window.alert('Livre supprimé')
+        getBooks()
         setIsDeleteModalOpen(false);
         // maybe call function to 'get books' again 
       } else {

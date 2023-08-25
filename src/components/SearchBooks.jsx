@@ -149,7 +149,7 @@ function SearchBook() {
                     />
                 </div>
             </div>
-            <BookTable />
+            <BookTable getBooks={getBooks} />
         </div>
     )
 }

@@ -4,6 +4,7 @@ const oracledb = require('oracledb')
 const { connectionProperties, doRelease } = require('../database')
 
 
+
 // add CRUD activities
 router.delete("/livre/:LID", async function (request, response) {
     console.log("DELETE BOOK");
@@ -25,7 +26,7 @@ router.delete("/livre/:LID", async function (request, response) {
         END;`
 
         const bind = {
-            result: { type: oracledb.BOOLEAN, dir: oracledb.BIND_OUT },
+            result: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
             p_id: String(LID)
         }
 
@@ -37,7 +38,7 @@ router.delete("/livre/:LID", async function (request, response) {
                 return;
             }
 
-            const resultBoolean = result.outBinds.result === 1
+            const resultBoolean = result.outBinds.result
             if (resultBoolean) {
                 console.log('Book deleted. ID was:' + LID);
                 response.status(200).json({ message: "Book deleted successfully" })
