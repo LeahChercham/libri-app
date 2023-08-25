@@ -32,7 +32,7 @@ function UserRow({ utilisateur }) {
 
     return (
         <tr>
-            <td>{utilisateur.UID}</td>
+            <td>{utilisateur.UTID}</td>
             <td>{utilisateur.NOM}</td>
             <td>{utilisateur.PRENOM}</td>
             <td>{utilisateur.ADRESSE}</td>
