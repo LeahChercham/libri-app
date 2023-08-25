@@ -45,6 +45,7 @@ router.post("/utilisateur", async function (request, response) {
 
     console.log('POST USER')
     let connection
+    console.log(request.body)
 
     try {
         connection = await oracledb.getConnection(connectionProperties);
@@ -57,6 +58,7 @@ router.post("/utilisateur", async function (request, response) {
 
         const dateValue = request.body.anniversaire ? new Date(request.body.anniversaire) : null;
 
+        console.log(dateValue);
         const bindVars = { // property names have to match 
             result: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
             ...request.body,
@@ -67,7 +69,7 @@ router.post("/utilisateur", async function (request, response) {
         const result = await connection.execute(sql, bindVars);
         const newUserId = result.outBinds.result;
         console.log('New user ID:', newUserId);
-        response.status(201).json({ message: "New user saved", uid: newUserId });
+        response.status(201).json({ message: "New user saved", utid: newUserId });
     } catch (error) {
 
         console.error(error.message);

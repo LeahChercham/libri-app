@@ -170,6 +170,7 @@ router.get("/livres_with_authors", async function (request, response) {
 router.post("/livres", async function (request, response) {
 
     console.log('POST BOOKS')
+    console.log(request.body)
     let connection
 
     try {
