@@ -12,10 +12,10 @@ import { UserProvider } from '@/context/user'; // wrap UserProvider around entir
 import { BooksProvider } from '@/context/books'; // wrap BooksProvider around entire app so it can be accessed in the entire Application
 import { PageProvider } from '@/context/page'; // wrap PageProvider around entire app so it can be accessed in the entire Application
 import Borrows from '@/components/Borrows';
-import Users from '@/components/Users';
 import BookForm from '@/components/BookComponents/BookForm';
 import { UtilisateursProvider } from '@/context/utilisateurs';
-
+import UserForm from '@/components/UserComponents/UserForm';
+import UserPage from '@/components/UserComponents/UserPage';
 export default function Home() {
 
 
@@ -52,11 +52,15 @@ export default function Home() {
                     <Route path="/borrows" element={
                       <Borrows />
                     }> </Route>
+
                     <Route path="/users" element={
-                      <Users />
+                      <UserPage />
                     }>
                     </Route>
 
+                    <Route path="/addUser" element={
+                      <UserForm />
+                    }> </Route>
                   </Routes>
                 </div>
 

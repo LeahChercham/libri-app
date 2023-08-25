@@ -40,4 +40,47 @@ router.get("/utilisateurs", async function (request, response) {
     })
 })
 
+
+router.post("/utilisateur", async function (request, response) {
+
+    console.log('POST USER')
+    let connection
+
+    try {
+        connection = await oracledb.getConnection(connectionProperties);
+        console.log('After connection')
+        const sql = `
+            BEGIN
+                :result := utilisateur_admin.add_user(:adresse, :codepostal, :ville, :email, :anniversaire, :telephone, :prenom, :nom);
+            END;
+        `;
+
+        const dateValue = request.body.anniversaire ? new Date(request.body.anniversaire) : null;
+
+        const bindVars = { // property names have to match 
+            result: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+            ...request.body,
+            anniversaire: dateValue
+        };
+
+
+        const result = await connection.execute(sql, bindVars);
+        const newUserId = result.outBinds.result;
+        console.log('New user ID:', newUserId);
+        response.status(201).json({ message: "New user saved", uid: newUserId });
+    } catch (error) {
+
+        console.error(error.message);
+        response.status(500).send("Error connecting to DB");
+    } finally {
+        if (connection) {
+            doRelease(connection)
+            console.log("after release");
+        }
+    }
+
+});
+
+
+router.post('/utilisateur')
 module.exports = router

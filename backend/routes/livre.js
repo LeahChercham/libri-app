@@ -209,25 +209,4 @@ router.post("/livres", async function (request, response) {
 
 
 
-
-// Usage POST
-// const bookData = {
-//     lid: 'your_lid',
-//     titre: 'Book Title',
-//     pages: 300,
-//     lienimage: 'image_url',
-//     annee: new Date()
-// };
-
-// addBook(bookData);
-
-
-
-
-
-
-
-
-
-
 module.exports = router
