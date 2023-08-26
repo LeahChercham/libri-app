@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
-import UserForm from "./UserForm";
-import UserTable from "./UserTable";
 import { Button } from '@mui/material'
 import { Link as RouterLink } from "react-router-dom";
 import { useBorrowsContext } from "@/context/borrows";
 import Axios from 'axios'
 import consts from "@/consts";
 import { CREATE_ROUTE } from "@/consts";
+import BorrowTable from "./BorrowComponents/BorrowTable";
 
 
 function Borrows() {
@@ -23,9 +22,9 @@ function Borrows() {
             if (response.status === 200) { // Check for a successful status code
                 console.log('borrows fetched successfully!');
                 console.log(response)
-                const borrows = response.data.borrows; // Assuming response.data.rows contains the books array
-                setBorrows(borrows); // Update the borrows context with fetched data
-                console.log(borrows)
+                const data = response.data.borrows; // Assuming response.data.rows contains the borrows array
+                setBorrows(data); // Update the borrows context with fetched data
+                console.log(data)
             } else {
                 console.error('Error fetching borrows');
             }
@@ -47,7 +46,7 @@ function Borrows() {
                 <Button>Ajouter un emprunt</Button>
             </RouterLink>
 
-            <UserTable />
+            <BorrowTable />
         </div>
     )
 
