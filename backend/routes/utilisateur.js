@@ -83,6 +83,50 @@ router.post("/utilisateur", async function (request, response) {
 
 });
 
+router.get("/utilisateurs/recherche", async function (request, response) {
+    console.log('SEARCH USER WITH QUERY');
+
+    const search_string = request.query.search_string
+
+    oracledb.getConnection(connectionProperties, function (err, connection) {
+        if (err) {
+            console.error(err.message)
+            response.status(500).send('Error connecting to DB')
+            return;
+        }
+
+        console.log('After connection');
+
+        const sql = `BEGIN :users_cur := utilisateur_admin.search_users(:search_string); END;`
+        const bind = {
+            users_cur: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT },
+            search_string: search_string
+        }
+
+        connection.execute(sql, bind, { outFormat: oracledb.OBJECT }, async function (err, result) {
+            if (err) {
+                console.log(err.message);
+                response.status(500).send("Error getting data from DB")
+                doRelease(connection)
+                return;
+            }
+
+            const cursor = result.outBinds.users_cur
+
+            const rows = await cursor.getRows(100)
+
+            console.log("users found: ", rows);
+
+            response.status(200).json({ users: rows })
+
+            doRelease(connection)
+            console.log("After release");
+
+        })
+
+    })
+
+})
 
 router.post('/utilisateur')
 module.exports = router

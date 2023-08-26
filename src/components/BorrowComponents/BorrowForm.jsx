@@ -9,6 +9,7 @@ import makeAnimated from 'react-select/animated'
 import Async, { useAsync } from 'react-select/async'
 import AsyncSelect from 'react-select/async';
 import { useBooksContext } from '@/context/books';
+import { useUtilisateursContext } from '@/context/utilisateurs';
 // --- End For Select
 
 const CREATE_ROUTE = consts.CREATE_ROUTE
@@ -44,6 +45,9 @@ function BorrowForm() {
     const [searchString, setSearchString] = useState("")
     const [books, setBooks] = useBooksContext()
     const [options, setOptions] = useState([])
+    const [userOptions, setUserOptions] = useState([])
+
+    const [utilisateur, setUtilisateurs] = useUtilisateursContext()
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -107,11 +111,55 @@ function BorrowForm() {
     };
 
 
+    const searchUser = async (inputValue) => {
+        console.log('searching user ' + inputValue);
+        if (inputValue) {
+            try {
+                const response = await Axios.get(CREATE_ROUTE(`utilisateurs/recherche?search_string=${inputValue}`))
+                console.log(response)
+                if (response.status === 200) { // Check for a successful status code
+                    console.log('Utilisateurs fetched successfully!');
+                    console.log(response)
+                    const users = response.data.users; // Assuming response.data.rows contains the users array
+                    //  setUtilisateurs(users); // Update the users context with fetched data
+                    let newOptions = users.map((u) => ({ value: u.UTID, label: `${u.PRENOM} ${u.NOM} - ${u.EMAIL} - ${u.TELEPHONE}` }))
+                    setUserOptions(newOptions)
+                    console.log(userOptions)
+                    return userOptions
+                } else {
+                    console.error('Error fetching books');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } else {
+            getUsers() // TO DO 
+        }
+    }
 
+    const getUsers = async () => {
+
+        console.log("getting users");
+        try {
+            const response = await Axios.get(CREATE_ROUTE('utilisateurs'));
+            console.log(response)
+            if (response.status === 200) { // Check for a successful status code
+                console.log('users fetched successfully!');
+                console.log(response)
+                const users = response.data.users; // Assuming response.data.rows contains the books array
+                setUtilisateurs(users); // Update the users context with fetched data
+                console.log(users)
+            } else {
+                console.error('Error fetching users');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
 
     const searchBook = async (inputValue) => {
 
-        console.log("searching" + inputValue)
+        console.log("searching book " + inputValue)
         if (inputValue) {
             try {
                 const response = await Axios.get(CREATE_ROUTE(`livre/recherche?search_string=${inputValue}`))
@@ -191,29 +239,18 @@ function BorrowForm() {
                 maxLength="240" onInput={maxLengthCheck} style={style.input}
             />
 
-            {/* Utilisateur dropdown */}
-
-            {/* {borrowData.livres.map((livre, index) => (
-                <div key={index}>
-                    {/* create dropdown selector with books / search by name (title, author) 
-                    <AsyncSelect
-                        // loadOptions={loadOptions}
-                        options={books}
-                        onChange={handleBookChange}
-                        // components={animatedComponents}
-                        isMulti
-                        closeMenuOnSelect={false}
-                        closeMenuOnScroll={false}
-                    />
-
- */}
+            <AsyncSelect
+                name="users"
+                multi={false}
+                loadOptions={searchUser}
+                closeMenuOnSelect={false}
+                closeMenuOnScroll={false}
+            />
 
             <AsyncSelect
                 name="books"
-                multi={true}
-                // value={}
+                isMulti
                 loadOptions={searchBook}
-                // options={options}
                 closeMenuOnSelect={false}
                 closeMenuOnScroll={false}
             />
@@ -221,8 +258,8 @@ function BorrowForm() {
 
             {showTooLongText.show ? <div style={style.tooLongText}>{showTooLongText.text}</div> : <div></div>}
 
-            <Button onClick={handleAddBook}>Ajouter un livre à l'emprunt</Button>
-            {/* Create dropdown and search to add book + Implement same logic as Authors for Books form*/}
+            <Button onClick={handleAddBook}>Ajouter un livre à l'emprunt</Button> /
+            {/* Create dropdown and search to add book + Implement same logic as Authors for Books form TO DO ADD DATA TO ARRAY */}
             <Button onClick={handleSaveBorrow}>Enregistrer</Button>
         </div>
     );
