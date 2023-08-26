@@ -220,6 +220,12 @@ function BorrowForm() {
         }
     };
 
+    const handleChange = selectedOption => {
+        debugger
+        console.log(selectedOption)
+
+    }
+
     return (
         <div style={style.container}>
             <h2>Ajouter un emprunt</h2>
@@ -242,41 +248,40 @@ function BorrowForm() {
                 maxLength="240" onInput={maxLengthCheck} style={style.input}
             />
 
-            <input
-                type="date"
-                name="dateretourreel"
-                // automatically filled (+30 days)
-                placeholder="Date de retour réel"
-                value={borrowData.dateretourreel}
-                onChange={handleInputChange}
-                maxLength="240" onInput={maxLengthCheck} style={style.input}
-            />
+
 
             <AsyncSelect
+                options={users}
+                onInputChange={(value, actionMeta) => console.log('value statu: ' + newValue)}
                 name="users"
                 multi={false}
                 loadOptions={searchUser}
                 closeMenuOnSelect={false}
                 closeMenuOnScroll={false}
                 style={style.input}
+
+                loadingMessage="...loading"
+
             />
             <div style={style.input}>
                 <AsyncSelect
+                    onInputChange={(value, actionMeta) => console.log('value statu: ' + newValue)}
+                    options={books}
                     name="books"
                     isMulti
                     loadOptions={searchBook}
                     closeMenuOnSelect={false}
                     closeMenuOnScroll={false}
                     style={style.input}
+
+                    loadingMessage="...loading"
                 />
             </div>
             <div style={style.input}>
                 <Select
+                    onInputChange={(value, actionMeta) => console.log('value statu: ' + newValue)}
                     name="statut"
                     multi={false}
-                    options={statutOptions}
-
-                // default value ? 
                 />
             </div>
 
