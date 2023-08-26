@@ -9,6 +9,7 @@ import consts from '../consts'
 import BookTable from './BookComponents/BookTable'
 import { useBooksContext } from '@/context/books';
 import { useUserContext } from '@/context/user';
+import { useStatutContext } from '@/context/statut';
 const CREATE_ROUTE = consts.CREATE_ROUTE
 const util = require('util')
 
@@ -63,6 +64,7 @@ const styles = {
 function SearchBook() {
 
     const [searchString, setSearchString] = useState("")
+    const [statut, setStatut] = useStatutContext()
 
 
     const [user, setUser] = useUserContext()
@@ -122,7 +124,26 @@ function SearchBook() {
         }
     };
 
+    const getStatut = async () => {
+        try {
+            const response = await Axios.get(CREATE_ROUTE('statut'));
+            console.log(response)
+            if (response.status === 200) { // Check for a successful status code
+                console.log('Statut fetched successfully!');
+                console.log(response)
+                const statut = response.data.statut; // Assuming response.data.rows contains the statut array
+                setStatut(statut); // Update the statut context with fetched data
+                console.log(statut)
+            } else {
+                console.error('Error fetching statut');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
     useEffect(() => {
+        getStatut();
         getBooks(); // Fetch when component mounts
     }, [])
 

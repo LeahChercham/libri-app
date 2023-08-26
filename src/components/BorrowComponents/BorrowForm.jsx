@@ -10,6 +10,7 @@ import Async, { useAsync } from 'react-select/async'
 import AsyncSelect from 'react-select/async';
 import { useBooksContext } from '@/context/books';
 import { useUtilisateursContext } from '@/context/utilisateurs';
+import { useStatutContext } from '@/context/statut';
 // --- End For Select
 
 const CREATE_ROUTE = consts.CREATE_ROUTE
@@ -32,14 +33,21 @@ const style = {
 }
 
 function BorrowForm() {
+    let date = new Date()
+    let today = (date.toISOString().substring(0, 10))
+    let calcDate = new Date()
+    calcDate.setDate(date.getDate() + 30)
+    let today_plus_30 = calcDate.toISOString().substring(0, 10)
     const [borrowData, setBorrowData] = useState({ // TODO 
-        dateemprunt: '',
-        dateretourprevu: '',
+        dateemprunt: today,
+        dateretourprevu: today_plus_30,
         dateretourreel: '',
         utilisateur_uid: '',
         statut_sid: '',
         livres: []
     });
+
+
 
     const [showTooLongText, setShowTooLongText] = useState({ show: false, text: "" })
     const [searchString, setSearchString] = useState("")
@@ -49,12 +57,17 @@ function BorrowForm() {
 
     const [utilisateur, setUtilisateurs] = useUtilisateursContext()
 
+    const [statut, setStatut] = useStatutContext()
+
+    const statutOptions = statut.map(s => ({ value: s.SID, label: s.APPELLATION }))
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setBorrowData((prevData) => ({
             ...prevData,
             [name]: value
         }));
+        console.log("value: " + value)
     };
 
     const handleAddBook = () => {
@@ -211,7 +224,7 @@ function BorrowForm() {
         <div style={style.container}>
             <h2>Ajouter un emprunt</h2>
             <input
-                type="text"
+                type="date"
                 name="dateemprunt"
                 placeholder="Date de l'emprunt"
                 value={borrowData.dateemprunt}
@@ -220,7 +233,7 @@ function BorrowForm() {
                 style={style.input}
             />
             <input
-                type="text"
+                type="date"
                 name="dateretourprevu"
                 // automatically filled (+30 days)
                 placeholder="Date de retour prévu"
@@ -230,7 +243,7 @@ function BorrowForm() {
             />
 
             <input
-                type="text"
+                type="date"
                 name="dateretourreel"
                 // automatically filled (+30 days)
                 placeholder="Date de retour réel"
@@ -245,23 +258,34 @@ function BorrowForm() {
                 loadOptions={searchUser}
                 closeMenuOnSelect={false}
                 closeMenuOnScroll={false}
+                style={style.input}
             />
+            <div style={style.input}>
+                <AsyncSelect
+                    name="books"
+                    isMulti
+                    loadOptions={searchBook}
+                    closeMenuOnSelect={false}
+                    closeMenuOnScroll={false}
+                    style={style.input}
+                />
+            </div>
+            <div style={style.input}>
+                <Select
+                    name="statut"
+                    multi={false}
+                    options={statutOptions}
 
-            <AsyncSelect
-                name="books"
-                isMulti
-                loadOptions={searchBook}
-                closeMenuOnSelect={false}
-                closeMenuOnScroll={false}
-            />
+                // default value ? 
+                />
+            </div>
 
 
             {showTooLongText.show ? <div style={style.tooLongText}>{showTooLongText.text}</div> : <div></div>}
 
-            <Button onClick={handleAddBook}>Ajouter un livre à l'emprunt</Button> /
-            {/* Create dropdown and search to add book + Implement same logic as Authors for Books form TO DO ADD DATA TO ARRAY */}
+
             <Button onClick={handleSaveBorrow}>Enregistrer</Button>
-        </div>
+        </div >
     );
 }
 
