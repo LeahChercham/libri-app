@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useId, useState } from 'react';
 import Axios from 'axios';
 import consts from '../../consts'
 import { Input, Button } from '@mui/material'
@@ -31,6 +31,8 @@ const style = {
         padding: "1em",
     }
 }
+
+
 
 function BorrowForm() {
     let date = new Date()
@@ -220,11 +222,18 @@ function BorrowForm() {
         }
     };
 
-    const handleChange = selectedOption => {
+    const handleChange = value => {
         debugger
-        console.log(selectedOption)
+        console.log(value)
 
     }
+
+    // HERE TO DO
+    const refUserSelector = useRef(null)
+    const refBooksSelector = useRef(null)
+    const refStatutSelector = useRef(null)
+
+
 
     return (
         <div style={style.container}>
@@ -251,8 +260,9 @@ function BorrowForm() {
 
 
             <AsyncSelect
+                id="userSelector"
+                debugger
                 options={users}
-                onInputChange={(value, actionMeta) => console.log('value statu: ' + newValue)}
                 name="users"
                 multi={false}
                 loadOptions={searchUser}
@@ -265,7 +275,7 @@ function BorrowForm() {
             />
             <div style={style.input}>
                 <AsyncSelect
-                    onInputChange={(value, actionMeta) => console.log('value statu: ' + newValue)}
+                    id="booksSelector"
                     options={books}
                     name="books"
                     isMulti
@@ -279,9 +289,14 @@ function BorrowForm() {
             </div>
             <div style={style.input}>
                 <Select
-                    onInputChange={(value, actionMeta) => console.log('value statu: ' + newValue)}
+                    id="statutSelector"
+                    cacheOptions
+                    defaultOptions
                     name="statut"
                     multi={false}
+                    getOptionLabel={e => e.title}
+                    getOptionValue={e => e.id}
+                    options={statut}
                 />
             </div>
 
