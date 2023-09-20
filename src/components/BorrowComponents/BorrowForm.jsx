@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useState } from 'react';
+import React, { useEffect, useId, useState, useRef } from 'react';
 import Axios from 'axios';
 import consts from '../../consts'
 import { Input, Button } from '@mui/material'
@@ -44,7 +44,7 @@ function BorrowForm() {
         dateemprunt: today,
         dateretourprevu: today_plus_30,
         dateretourreel: '',
-        utilisateur_uid: '',
+        utilisateur_utid: '',
         statut_sid: '',
         livres: []
     });
@@ -76,7 +76,7 @@ function BorrowForm() {
         setBorrowData((prevData) => ({
             ...prevData,
             livres: [...prevData.livres,
-            { titre: '', autheur: '' }]
+            { titre: '', auteur: '' }]
         }))
     }
 
@@ -93,7 +93,9 @@ function BorrowForm() {
 
 
     const handleSaveBorrow = async () => {
-
+        // TO DO create post route /emprunt 
+        console.log("handle save borrow borrow")
+        console.log(borrowData);
 
         try {
 
@@ -101,7 +103,7 @@ function BorrowForm() {
                 dateemprunt: borrowData.dateemprunt,
                 dateretourprevu: borrowData.dateretourprevu,
                 dateretourreel: borrowData.dateretourreel,
-                utilisateur_uid: borrowData.utilisateur_uid,
+                utilisateur_utid: borrowData.utilisateur_utid,
                 statut_sid: borrowData.statut_sid,
                 livres: borrowData.livres,
             })
@@ -112,7 +114,7 @@ function BorrowForm() {
                     dateemprunt: '',
                     dateretourprevu: '',
                     dateretourreel: '',
-                    utilisateur_uid: '',
+                    utilisateur_utid: '',
                     statut_sid: '',
                     livres: []
                 })
@@ -222,18 +224,6 @@ function BorrowForm() {
         }
     };
 
-    const handleChange = value => {
-        debugger
-        console.log(value)
-
-    }
-
-    // HERE TO DO
-    const refUserSelector = useRef(null)
-    const refBooksSelector = useRef(null)
-    const refStatutSelector = useRef(null)
-
-
 
     return (
         <div style={style.container}>
@@ -262,15 +252,21 @@ function BorrowForm() {
             <AsyncSelect
                 id="userSelector"
                 debugger
-                options={users}
+                options={userOptions}
                 name="users"
                 multi={false}
                 loadOptions={searchUser}
                 closeMenuOnSelect={false}
                 closeMenuOnScroll={false}
                 style={style.input}
-
-                loadingMessage="...loading"
+                onChange={(selectedUser) => {
+                    console.log("in on change user")
+                    setBorrowData((prevData) => ({
+                        ...prevData,
+                        utilisateur_utid: selectedUser.value,
+                    }));
+                }}
+            // loadingMessage={"...loading"}
 
             />
             <div style={style.input}>
@@ -283,8 +279,18 @@ function BorrowForm() {
                     closeMenuOnSelect={false}
                     closeMenuOnScroll={false}
                     style={style.input}
+                    onChange={(selectedBooks) => {
+                        console.log("in on change books")
+                        setBorrowData((prevData) => ({
+                            ...prevData,
+                            livres: selectedBooks.map((book) => ({
+                                titre: book.label,
+                                LID: book.value,
+                            })),
+                        }));
+                    }}
 
-                    loadingMessage="...loading"
+                // loadingMessage={"...loading"}
                 />
             </div>
             <div style={style.input}>
@@ -294,9 +300,18 @@ function BorrowForm() {
                     defaultOptions
                     name="statut"
                     multi={false}
-                    getOptionLabel={e => e.title}
-                    getOptionValue={e => e.id}
-                    options={statut}
+                    // getOptionLabel={e => e.label}
+                    // getOptionValue={e => e.value}
+                    options={statutOptions}
+                    onChange={(selectedStatut) => {
+                        console.log("in on change statut")
+                        setBorrowData((prevData) => ({
+                            ...prevData,
+                            statut_sid: selectedStatut.value,
+                        }));
+                    }}
+                    defaultValue={{ label: "Emprunt en cours", value: 2 }}
+
                 />
             </div>
 
