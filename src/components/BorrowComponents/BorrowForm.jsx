@@ -43,9 +43,9 @@ function BorrowForm() {
     const [borrowData, setBorrowData] = useState({ // TODO 
         dateemprunt: today,
         dateretourprevu: today_plus_30,
-        dateretourreel: '',
+        dateretourreel: null,
         utilisateur_utid: '',
-        statut_sid: '',
+        statut_sid: '2',
         livres: []
     });
 
@@ -99,25 +99,38 @@ function BorrowForm() {
 
         try {
 
-            let borrowResponse = await Axios.post(CREATE_ROUTE('emprunt'), { // TO DO 
+            let borrowResponse = await Axios.post(CREATE_ROUTE('emprunt'), {
                 dateemprunt: borrowData.dateemprunt,
                 dateretourprevu: borrowData.dateretourprevu,
                 dateretourreel: borrowData.dateretourreel,
                 utilisateur_utid: borrowData.utilisateur_utid,
                 statut_sid: borrowData.statut_sid,
-                livres: borrowData.livres,
+                // livres: borrowData.livres,
             })
+
+
             if (borrowResponse) {
-                console.log('Emprunt saved successfully!');
-                window.alert("Enregistrement réussi")
-                setBorrowData({ // TO DO EMPTY STATE OF BORROW
-                    dateemprunt: '',
-                    dateretourprevu: '',
-                    dateretourreel: '',
-                    utilisateur_utid: '',
-                    statut_sid: '',
-                    livres: []
+                console.log("borrow response: ");
+                console.log(borrowResponse);
+                let borrowLivreResponse = await Axios.post(CREATE_ROUTE('empruntlivre'), {
+                    livres: borrowData.livres,
+                    emprunt_eid: borrowResponse.eid
                 })
+
+                if (borrowLivreResponse) {
+                    console.log('Emprunt saved successfully!');
+                    window.alert("Enregistrement réussi")
+                    setBorrowData({
+                        dateemprunt: '',
+                        dateretourprevu: '',
+                        dateretourreel: null,
+                        utilisateur_utid: '',
+                        statut_sid: '2',
+                        livres: []
+                    })
+                } else {
+                    console.error("Error saving emprunt_livre")
+                }
 
             } else {
                 console.error('Error saving emprunt');

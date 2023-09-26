@@ -40,4 +40,109 @@ router.get("/borrows", async function (request, response) {
 })
 
 
+// TO DO create PL/SQL
+router.post("/emprunt", async function (request, response) {
+    console.log('POST EMPRUNT');
+    console.log(request.body);
+
+    let connection
+
+    try {
+        connection = await oracledb.getConnection(connectionProperties)
+        console.log('After connection');
+
+        // TO DO SQL / VERIFY PACKAGE IN SQL DEVELOPER APP
+        const sql = `
+        BEGIN
+                :result := emprunt_admin.add_emprunt(:utilisateur_utid, :statut_sid, :dateemprunt, :dateretourprevu, :dateretourreel);
+            END;
+        `
+
+        // verify if using correct propertys in the request.body object
+        const dateemprunt = request.body.dateemprunt ? new Date(request.body.dateemprunt) : null;
+        const dateretourprevu = request.body.dateretourprevu ? new Date(request.body.dateretourprevu) : null;
+        const dateretourreel = request.body.dateretourreel ? new Date(request.body.dateretourreel) : null;
+
+
+        const bindVars = { // Property names have to match
+            result: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT },
+            ...request.body,
+            dateemprunt: dateemprunt,
+            dateretourprevu: dateretourprevu,
+            dateretourreel: dateretourreel
+        }
+
+        const result = await connection.execute(sql, bindVars);
+        const newEmpruntId = result.outBinds.result
+        console.log("NEW EMPRUNT ID", newEmpruntId);
+
+        response.status(201).json({ message: "New Emprunt Saved", eid: newEmpruntId })
+    } catch (error) {
+
+        console.error(error.message);
+        response.status(500).send("Error connecting to DB");
+    } finally {
+        if (connection) {
+            doRelease(connection)
+            console.log("after release");
+        }
+
+    }
+
+})
+
+// TO DO create PL/SQL
+router.post("/empruntlivre", async function (request, response) {
+
+    console.log('POST EMPRUNT_LIVRE')
+    const emprunt_eid = request.body.emprunt_eid
+    const livres = request.body.livres
+
+
+    let connection
+
+    let results = []
+
+    try {
+        connection = await oracledb.getConnection(connectionProperties);
+        console.log('After connection')
+        livres.forEach(async livre => {
+            let livre_lid = livre.lid
+            console.log(emprunt_eid, livre_lid)
+            const sql = `
+                    BEGIN
+                        emprunt_livre_admin.assign_emprunt_livre(:livre_lid, :emprunt_eid, :result);
+                    END;
+                `;
+            const binds = {
+                livre_lid: livre_lid,
+                emprunt_eid: emprunt_eid,
+                result: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT }
+            };
+
+            const result = await connection.execute(sql, binds);
+            results.push(result.outBinds.result)
+
+
+        })
+        const allSuccess = array => array.every(i = i === 1)
+        let verif = allSuccess(verif)
+        console.log("result: ", verif)
+        if (verif) {
+            response.status(201).json({ message: 'All Records inserted successfully EMPRUNT_LIVRE' });
+        } else {
+            response.status(500).json({ message: 'Error inserting into EMPRUNT_LIVRE' })
+        };
+    } catch (error) {
+        console.error(error.message);
+        response.status(500).send("Error connecting to DB");
+    } finally {
+        if (connection) {
+            doRelease(connection);
+            console.log("after release");
+        }
+    }
+});
+
+
 module.exports = router

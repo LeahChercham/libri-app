@@ -192,6 +192,9 @@ router.post("/livres", async function (request, response) {
 
 
         const result = await connection.execute(sql, bindVars);
+
+
+
         const newBookId = result.outBinds.result;
         console.log('New book ID:', newBookId);
         response.status(201).json({ message: "New book saved", lid: newBookId });
