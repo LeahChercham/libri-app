@@ -33,6 +33,7 @@ function BorrowRow({ borrow }) {
     return (
         <tr>
             <td>{borrow.EID}</td>
+            <td>{borrow.appellation}</td>
             <td>{borrow.dateemprunt}</td>
             <td>{borrow.dateretourprevu}</td>
             <td>{borrow.dateretourreel}</td>
@@ -51,6 +52,8 @@ function BorrowRow({ borrow }) {
             <td>
                 <button onClick={handleDelete}>Delete</button>
             </td>
+            <td>{borrow.prenom & " " & borrow.nom}</td>
+            <td>{borrow.livres}</td>
 
 
         </tr>
@@ -58,3 +61,4 @@ function BorrowRow({ borrow }) {
 }
 
 export default BorrowRow;
+

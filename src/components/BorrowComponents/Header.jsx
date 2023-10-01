@@ -5,12 +5,14 @@ class Header extends Component {
         return (
             <tr className="borrowHeader" >
                 <th>Identifiant</th>
-                {/* <th>Statut</th> */}
+                <th>Statut</th>
                 <th>Date de l'emprunt</th>
                 <th>Date de retour prévu </th>
                 <th>Date de retour réel</th>
-                {/* utilisateur */}
-                {/* <th>Livres empruntés</th> */}
+                <th>Option</th>
+                <th>Option</th>
+                <th>Utilisateur</th>
+                <th>Livres empruntés</th>
 
             </tr>
 

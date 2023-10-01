@@ -17,7 +17,7 @@ function Borrows() {
 
         console.log("getting borrows");
         try {
-            const response = await Axios.get(CREATE_ROUTE('borrows'));
+            const response = await Axios.get(CREATE_ROUTE('borrowsdetails'));
             console.log(response)
             if (response.status === 200) { // Check for a successful status code
                 console.log('borrows fetched successfully!');

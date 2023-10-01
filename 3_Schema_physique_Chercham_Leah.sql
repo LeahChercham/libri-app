@@ -38,7 +38,7 @@ CREATE TABLE livre (
     lid       CHAR(240) NOT NULL,
     titre     VARCHAR2(240) NOT NULL,
     pages     NUMBER,
-    lienimage VARCHAR2(240),
+    lienimage VARCHAR2(4000),
     annee     DATE
 );
 
@@ -64,17 +64,14 @@ DELAI DEPASSE
 ALTER TABLE statut ADD CONSTRAINT statut_pk PRIMARY KEY ( sid );
 
 
--- Insert the first row
 INSERT INTO statut (sid, appellation, description)
-VALUES ('1', 'Rendu', 'Le livre a été rendu');
+VALUES 
+    ('1', 'Rendu', 'Le ou les livres ont été rendus'),
+    ('2', 'Emprunt en cours', 'Le ou les livres sont encore empruntés dans un délai normal'),
+    ('3', 'Délai dépassé', 'Le ou les livres n ont pas encore été déposés et le délai d emprunt est dépassé'),
+    ('4', 'Rendu en retard', 'Le ou les livres ont été rendus en retard'),
+    ('5', 'Prolongé', 'L emprunt est prolongé de 30 jours' );
 
--- Insert the second row
-INSERT INTO statut (sid, appellation, description)
-VALUES ('2', 'Emprunt en cours', 'Le livre est encore emprunté dans le délai normal');
-
--- Insert the third row
-INSERT INTO statut (sid, appellation, description)
-VALUES ('3', 'Délai dépassé', 'Le livre n''a pas encore été déposé et le délai d''emprunt est dépassé');
 
 
 CREATE TABLE utilisateur (
@@ -167,7 +164,12 @@ CREATE SEQUENCE auteur_id_seq
     NOCACHE
     NOCYCLE;
 
-
+create or replace TRIGGER emprunt_insert_trigger
+BEFORE INSERT OR DELETE ON emprunt
+FOR EACH ROW
+BEGIN
+    SELECT emprunt_id_seq.NEXTVAL INTO :new.eid FROM dual;
+END;
 
 -- Oracle SQL Developer Data Modeler Summary Report: 
 -- 

@@ -40,6 +40,7 @@ router.get("/borrows", async function (request, response) {
 })
 
 
+
 // TO DO create PL/SQL
 router.post("/emprunt", async function (request, response) {
     console.log('POST EMPRUNT');
@@ -144,5 +145,52 @@ router.post("/empruntlivre", async function (request, response) {
     }
 });
 
+router.get("/borrowsdetails", async function (request, response) {
+
+    console.log('GET EMPRUNTS WITH BOOKS AND AUTHORS');
+
+    oracledb.getConnection(connectionProperties, function (err, connection) {
+        if (err) {
+            console.error(err.message);
+            response.status(500).send("Error connecting to DB");
+            return;
+        }
+        console.log('After connection');
+
+        // Declare an empty emprunt_list to store the results
+        const empruntList = [];
+
+        const sql = `BEGIN
+        emprunt_admin.get_emprunt_details(:emprunt_list);
+      END;`
+
+        const bind = {
+            emprunt_list: { type: oracledb.CURSOR, dir: oracledb.BIND_OUT }
+        }
+
+        connection.execute(sql, bind, { outFormat: oracledb.OBJECT }, async function (err, result) {
+            if (err) {
+                console.error(err.message);
+                response.status(500).send("Error getting data from DB");
+                doRelease(connection);
+                return;
+            }
+
+            const cursor = result.outBinds.emprunt_list;
+            // Fetch rows from the cursor
+            // Fetch rows from the cursor and push them into empruntList
+            let row;
+            while ((row = await cursor.getRow())) {
+                empruntList.push(row);
+            }
+            console.log('borrows with books with authors:', rows);
+
+            response.status(200).json({ borrows: empruntList });
+
+            doRelease(connection);
+            console.log("after release");
+        });
+    });
+})
 
 module.exports = router
